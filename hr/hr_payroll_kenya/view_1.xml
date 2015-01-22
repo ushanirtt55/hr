@@ -26,50 +26,69 @@
         <field name="amount_python_compute">result = 400</field>
     </record>
   
-  <record id="nhif" model="hr.salary.rule">
-        <field name="name">NHIF</field>
-        <field name="sequence" eval="15"/>
-        <field name="code">NHIF</field>
-        <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">if categories.GROSS<=999:
-         result=0
-        elif categories.GROSS<=1499:
-         result=30
-        elif categories.GROSS<=1999:
-         result=40
-        elif categories.GROSS<=2999:
-         result=60
-        elif categories.GROSS<=3999:
-         result=80
-        elif categories.GROSS<=4999:
-         result=100
-        elif categories.GROSS<=5999:
-         result=120
-        elif categories.GROSS<=6999:
-         result=140
-        elif categories.GROSS<=7999:
-         result=160
-        elif categories.GROSS<=8999:
-         result=180
-        elif categories.GROSS<=9999:
-         result=200
-        elif categories.GROSS<=10999:
-         result=220
-        elif categories.GROSS<=11999:
-         result=240
-        elif categories.GROSS<=12999:
-         result=260
-        elif categories.GROSS<=13999:
-         result=280
-        elif categories.GROSS<=14999:
-         result=300
-        else:
-         result=320
+ <record id="nhif" model="hr.salary.rule">
+<field name="name">NHIF</field>
+<field name="sequence" eval="15"/>
+<field name="code">NHIF</field>
+<field name="category_id" ref="hr_payroll.DED"/>
+<field name="condition_select">none</field>
+<field name="amount_select">code</field>
+<field name="amount_python_compute">if categories.GROSS<=999:
+ result=0
+elif categories.GROSS<=1499:
+ result=30
+elif categories.GROSS<=1999:
+ result=40
+elif categories.GROSS<=2999:
+ result=60
+elif categories.GROSS<=3999:
+ result=80
+elif categories.GROSS<=4999:
+ result=100
+elif categories.GROSS<=5999:
+ result=120
+elif categories.GROSS<=6999:
+ result=140
+elif categories.GROSS<=7999:
+ result=160
+elif categories.GROSS<=8999:
+ result=180
+elif categories.GROSS<=9999:
+ result=200
+elif categories.GROSS<=10999:
+ result=220
+elif categories.GROSS<=11999:
+ result=240
+elif categories.GROSS<=12999:
+ result=260
+elif categories.GROSS<=13999:
+ result=280
+elif categories.GROSS<=14999:
+ result=300
+else:
+ result=320
 </field>
     </record>
   
-  
+<record id="paye" model="hr.salary.rule">
+<field name="name">PAYE</field>
+<field name="sequence" eval="50"/>
+<field name="code">PAYE</field>
+<field name="category_id" ref="hr_payroll.DED"/>
+<field name="condition_select">none</field>
+<field name="amount_select">code</field>
+<field name="amount_python_compute">
+w=categories.GROSS
+
+
+result = 400
+
+
+
+
+</field>
+    </record>
+
+
   </data>
  </openerp>

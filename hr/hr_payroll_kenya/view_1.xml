@@ -1,34 +1,94 @@
 <openerp>
 <data>
+  <record id="hr_rule_taxable" model="hr.salary.rule">
+  <field name="sequence" eval="10"/>
+        <field name="amount_python_compute">result = contract.wage+contract.house+contract.benefits</field>
+    </record>
+  
+  <record id="contribution_benefits" model="hr.salary.rule">
+        <field name="name">Contribution Benefits</field>
+        <field name="sequence" eval="2"/>
+        <field name="code">BENEFITS</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (contract.wage/100)*30</field>
+    </record>
+  
+  
+  <record id="nssf" model="hr.salary.rule">
+        <field name="name">NSSF</field>
+        <field name="sequence" eval="15"/>
+        <field name="code">NSSF</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 400</field>
+    </record>
+  
+ <record id="nhif" model="hr.salary.rule">
+<field name="name">NHIF</field>
+<field name="sequence" eval="15"/>
+<field name="code">NHIF</field>
+<field name="category_id" ref="hr_payroll.DED"/>
+<field name="condition_select">none</field>
+<field name="amount_select">code</field>
+<field name="amount_python_compute">if categories.GROSS<=999:
+ result=0
+elif categories.GROSS<=1499:
+ result=30
+elif categories.GROSS<=1999:
+ result=40
+elif categories.GROSS<=2999:
+ result=60
+elif categories.GROSS<=3999:
+ result=80
+elif categories.GROSS<=4999:
+ result=100
+elif categories.GROSS<=5999:
+ result=120
+elif categories.GROSS<=6999:
+ result=140
+elif categories.GROSS<=7999:
+ result=160
+elif categories.GROSS<=8999:
+ result=180
+elif categories.GROSS<=9999:
+ result=200
+elif categories.GROSS<=10999:
+ result=220
+elif categories.GROSS<=11999:
+ result=240
+elif categories.GROSS<=12999:
+ result=260
+elif categories.GROSS<=13999:
+ result=280
+elif categories.GROSS<=14999:
+ result=300
+else:
+ result=320
+</field>
+    </record>
+  
+<record id="paye" model="hr.salary.rule">
+<field name="name">PAYE</field>
+<field name="sequence" eval="50"/>
+<field name="code">PAYE</field>
+<field name="category_id" ref="hr_payroll.DED"/>
+<field name="condition_select">none</field>
+<field name="amount_select">code</field>
+<field name="amount_python_compute">
+w=categories.GROSS
 
-  <record id="academy_mitosis_form" model="ir.ui.view">
-  <field name="name">Open Academy</field>
-  <field name="model">open.academy</field>
-  <field name="arch" type="xml">
-  <form string="Simple Form" version="7.0">
-  <header>
-  <button string="Return" name="button_ret" type="object"/>
-  </header>
-  <group string="Form">
-  <group string="Fields">
-  <field name="teacher_name"/>
-  <field name="dept"/>
-  <field name="teach_id"/>
-  <field name="empl"/>
-  </group>
-  </group>
-  </form>
-  </field>
-  </record>
-  
-  
-  <record model="ir.actions.act_window" id="action_open_aca">
-  <field name="name">Open Academy</field>
-  <field name="res_model">open.academy</field>
-  <field name="view_mode">tree,form</field>
-  <field name="target">current</field>
-  </record>
-  
-  <menuitem id="menu_oacademy" name="OpenAcademy" action="action_open_aca"/>
+
+result = 400
+
+
+
+
+</field>
+    </record>
+
+
   </data>
  </openerp>

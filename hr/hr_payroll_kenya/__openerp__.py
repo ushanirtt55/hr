@@ -1,7 +1,7 @@
 {
     'name' : 'Payroll Kenya',
     'version': '1.0',
-    'author': 'Mitosis Technologies',
+    'author': 'Mitosis Tech',
     'description': "My first sample odoo-8 module",
     'website':'www.mitosistech.com',
     'category':'Localization',

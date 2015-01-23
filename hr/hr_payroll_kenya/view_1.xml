@@ -1,18 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-  <record id="hr_rule_taxable" model="hr.salary.rule">
-  <field name="sequence" eval="10"/>
-  <field name="name">GROSS</field>
-    <field name="code">BENEFITS</field>
-    <field name="category_id" ref="hr_payroll.GROSS"/>
+  
+  <record id="ken_basic" model="hr.salary.rule">
+  	<field name="name">Basic Pay</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">BASIC</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
     <field name="condition_select">none</field>
-    <field name="amount_select">code</field>
+        <field name="amount_select">code</field>
+    <field name="amount_python_compute">result = contract.wage</field>
+    </record>
+    
+  <record id="ken_quat" model="hr.salary.rule">
+  	<field name="name">Quaters</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">QUAT</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+    <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+    <field name="amount_python_compute">result = contract.val_quat</field>
+    </record>
+  
+  <record id="ken_cquat" model="hr.salary.rule">
+  	<field name="name">Computed Quaters</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">CQUAT</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+    <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+    <field name="amount_python_compute">result = contract.comp_quat</field>
+    </record>
+  
+  <record id="ken_rent" model="hr.salary.rule">
+  	<field name="name">Rent Recovered</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">RENT</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+    <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+    <field name="amount_python_compute">result = contract.rent_emp</field>
+    </record>
+  
+  
+   <record id="ken_neth" model="hr.salary.rule">
+  	<field name="name">Net Housing</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">NETH</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+    <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+    <field name="amount_python_compute">result = contract.net_house</field>
+    </record>
+  
+  
+  <record id="ken_gross" model="hr.salary.rule">
+  	<field name="name">Gross Pay</field>
+        <field name="sequence" eval="10"/>
+        <field name="code">GROSSPAY</field>
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+    <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
     <field name="amount_python_compute">result = contract.wage+contract.house+contract.benefits</field>
     </record>
   
+  
+  <record id="ken_charge" model="hr.salary.rule">
+  	<field name="name">Taxable Pay</field>
+        <field name="sequence" eval="10"/>
+        <field name="code">CHARGE</field>
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+    <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+    <field name="amount_python_compute">result = categories.GROSSPAY-categories.NSSF</field>
+    </record>
+    
+    
+    
+  
   <record id="contribution_benefits" model="hr.salary.rule">
         <field name="name">Contribution Benefits</field>
-        <field name="sequence" eval="2"/>
+        <field name="sequence" eval="1"/>
         <field name="code">BENEFITS</field>
         <field name="category_id" ref="hr_payroll.ALW"/>
         <field name="condition_select">none</field>
@@ -23,7 +91,7 @@
   
   <record id="nssf" model="hr.salary.rule">
         <field name="name">NSSF</field>
-        <field name="sequence" eval="15"/>
+        <field name="sequence" eval="1"/>
         <field name="code">NSSF</field>
         <field name="category_id" ref="hr_payroll.DED"/>
         <field name="condition_select">none</field>
@@ -76,7 +144,44 @@ else:
 </field>
 </record>
   
-<record id="paye" model="hr.salary.rule">
+  <record id="ken_taxp" model="hr.salary.rule">
+<field name="name">Tax Charged</field>
+<field name="sequence" eval="50"/>
+<field name="code">TAXP</field>
+<field name="category_id" ref="hr_payroll.DED"/>
+<field name="condition_select">none</field>
+<field name="amount_select">code</field>
+<field name="amount_python_compute">
+w=categories.CHARGE
+w=75600.00
+result=0.0
+i=10.0
+while w>0:
+ if i==10.0:
+  if w>10164:
+   result=result+((10164.0/100.0)*i)
+  else:
+   result=result+((w/100.0)*i)
+  w=w-10164.0
+  
+ elif i==30:
+  result=result+((w/100.0)*i)
+  w=0
+  
+ else:
+  if w>9576:
+   result=result+((9576.0/100.0)*i)
+  else:
+   result=result+((w/100.0)*i)
+  w=w-9576.0
+  
+ i=i+5.0
+
+
+</field>
+    </record>
+  
+<record id="ken_paye" model="hr.salary.rule">
 <field name="name">PAYE</field>
 <field name="sequence" eval="50"/>
 <field name="code">PAYE</field>
@@ -84,32 +189,46 @@ else:
 <field name="condition_select">none</field>
 <field name="amount_select">code</field>
 <field name="amount_python_compute">
-w=categories.GROSS
-result=0
-i=10
+w=categories.CHARGE
+w=75600.00
+result=0.0
+i=10.0
 while w>0:
- if i==10:
+ if i==10.0:
   if w>10164:
-   result=result+((10164/100)*i)
+   result=result+((10164.0/100.0)*i)
   else:
-   result=result+((w/100)*i)
-  w=w-10164
+   result=result+((w/100.0)*i)
+  w=w-10164.0
+  
  elif i==30:
-  result=result+((w/100)*i)
+  result=result+((w/100.0)*i)
   w=0
+  
  else:
   if w>9576:
-   result=result+((9576/100)*i)
+   result=result+((9576.0/100.0)*i)
   else:
-   result=result+((w/100)*i)
-  w=w-9576
- 
- i=i+5
+   result=result+((w/100.0)*i)
+  w=w-9576.0
+  
+ i=i+5.0
 
-
+result=result-(contract.relief+contract.ins_relief)
 </field>
     </record>
 
-
+ <record id="ken_net" model="hr.salary.rule">
+  	<field name="name">Net Pay</field>
+        <field name="sequence" eval="200"/>
+        <field name="code">NETPAY</field>
+        <field name="category_id" ref="hr_payroll.NET"/>
+    <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+    <field name="amount_python_compute">result = categories.GROSSPAY-categories.NSSF-categories.NSSF-categories.PAYE</field>
+    </record>
+    
+    
+    
   </data>
  </openerp>

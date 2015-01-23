@@ -1,0 +1,32 @@
+<openerp>
+<data>
+ <record id="hr_contract_view_form_inherit_kenya" model="ir.ui.view">
+            <field name="name">hr.contract.view.form</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="l10n_in_hr_payroll.hr_contract_form_in_inherit" />
+             <field name="arch" type="xml">
+             <xpath expr="//group[@name='right_column']" position="replace">
+                 <group col="2" colspan="2" name="k_right_column">
+                    <separator colspan="2" string="Allowance"/>
+                        <field name="benefits"/>
+                        <field name="house"/>
+                        <field name="val_quat"/>
+                        <field name="comp_quat"/>
+                        <field name="rent_emp"/>
+                        <field name="net_house"/>
+                 </group>
+             </xpath>
+              <xpath expr="//group[@name='left_column']" position="replace">
+                 <group col="2" colspan="2" name="k_left_column">
+                    <separator colspan="2" string="Deduction"/>
+                        <field name="oci_hosp"/>
+                        <field name="ocupier_inter_hosp"/>
+                        <field name="relief"/>
+                        <field name="ins_relief"/>
+                  
+                 </group>
+             </xpath>
+             </field>
+  </record>
+  </data>
+ </openerp>

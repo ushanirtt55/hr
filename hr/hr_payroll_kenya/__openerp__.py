@@ -6,6 +6,6 @@
     'website':'www.mitosistech.com',
     'category':'Localization',
     'depends': ['hr','l10n_in_hr_payroll'],
-    'data': [],
+    'data': ['view_2.xml'],
     'installable': True,
 }

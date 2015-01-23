@@ -1,32 +1,115 @@
 <openerp>
 <data>
- <record id="hr_contract_view_form_inherit_kenya" model="ir.ui.view">
-            <field name="name">hr.contract.view.form</field>
-            <field name="model">hr.contract</field>
-            <field name="inherit_id" ref="l10n_in_hr_payroll.hr_contract_form_in_inherit" />
-             <field name="arch" type="xml">
-             <xpath expr="//group[@name='right_column']" position="replace">
-                 <group col="2" colspan="2" name="k_right_column">
-                    <separator colspan="2" string="Allowance"/>
-                        <field name="benefits"/>
-                        <field name="house"/>
-                        <field name="val_quat"/>
-                        <field name="comp_quat"/>
-                        <field name="rent_emp"/>
-                        <field name="net_house"/>
-                 </group>
-             </xpath>
-              <xpath expr="//group[@name='left_column']" position="replace">
-                 <group col="2" colspan="2" name="k_left_column">
-                    <separator colspan="2" string="Deduction"/>
-                        <field name="oci_hosp"/>
-                        <field name="ocupier_inter_hosp"/>
-                        <field name="relief"/>
-                        <field name="ins_relief"/>
-                  
-                 </group>
-             </xpath>
-             </field>
-  </record>
+  <record id="hr_rule_taxable" model="hr.salary.rule">
+  <field name="sequence" eval="10"/>
+  <field name="name">GROSS</field>
+    <field name="code">BENEFITS</field>
+    <field name="category_id" ref="hr_payroll.GROSS"/>
+    <field name="condition_select">none</field>
+    <field name="amount_select">code</field>
+    <field name="amount_python_compute">result = contract.wage+contract.house+contract.benefits</field>
+    </record>
+  
+  <record id="contribution_benefits" model="hr.salary.rule">
+        <field name="name">Contribution Benefits</field>
+        <field name="sequence" eval="2"/>
+        <field name="code">BENEFITS</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (contract.wage/100)*30</field>
+    </record>
+  
+  
+  <record id="nssf" model="hr.salary.rule">
+        <field name="name">NSSF</field>
+        <field name="sequence" eval="15"/>
+        <field name="code">NSSF</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 400</field>
+    </record>
+  
+<record id="nhif" model="hr.salary.rule">
+<field name="name">NHIF</field>
+<field name="sequence" eval="15"/>
+<field name="code">NHIF</field>
+<field name="category_id" ref="hr_payroll.DED"/>
+<field name="condition_select">none</field>
+<field name="amount_select">code</field>
+<field name="amount_python_compute">
+if categories.GROSS&lt;=999:
+ result=0
+elif categories.GROSS&lt;=1499:
+ result=30
+elif categories.GROSS&lt;=1999:
+ result=40
+elif categories.GROSS&lt;=2999:
+ result=60
+elif categories.GROSS&lt;=3999:
+ result=80
+elif categories.GROSS&lt;=4999:
+ result=100
+elif categories.GROSS&lt;=5999:
+ result=120
+elif categories.GROSS&lt;=6999:
+ result=140
+elif categories.GROSS&lt;=7999:
+ result=160
+elif categories.GROSS&lt;=8999:
+ result=180
+elif categories.GROSS&lt;=9999:
+ result=200
+elif categories.GROSS&lt;=10999:
+ result=220
+elif categories.GROSS&lt;=11999:
+ result=240
+elif categories.GROSS&lt;=12999:
+ result=260
+elif categories.GROSS&lt;=13999:
+ result=280
+elif categories.GROSS&lt;=14999:
+ result=300
+else:
+ result=320
+</field>
+</record>
+  
+<record id="paye" model="hr.salary.rule">
+<field name="name">PAYE</field>
+<field name="sequence" eval="50"/>
+<field name="code">PAYE</field>
+<field name="category_id" ref="hr_payroll.DED"/>
+<field name="condition_select">none</field>
+<field name="amount_select">code</field>
+<field name="amount_python_compute">
+w=categories.GROSS
+result=0
+i=10
+while w>0:
+ if i==10:
+  if w>10164:
+   result=result+((10164/100)*i)
+  else:
+   result=result+((w/100)*i)
+  w=w-10164
+ elif i==30:
+  result=result+((w/100)*i)
+  w=0
+ else:
+  if w>9576:
+   result=result+((9576/100)*i)
+  else:
+   result=result+((w/100)*i)
+  w=w-9576
+ 
+ i=i+5
+
+
+</field>
+    </record>
+
+
   </data>
  </openerp>
